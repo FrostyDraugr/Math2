@@ -39,7 +39,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ECurveTypes curveType;
 
+
 private:
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
+		UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
 	float t;
 	int tL;
 	FVector startScale;

@@ -22,4 +22,6 @@ public:
 	static FVector VectorLerp(FVector a, FVector b, float n);
 
 	static float Clamp(float min, float max, float value);
+
+	static bool IsLarger(float a, float b);
 };

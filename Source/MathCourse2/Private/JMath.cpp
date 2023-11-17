@@ -53,3 +53,8 @@ float JMath::Clamp(float min, float max, float value)
 
 	return v;
 }
+
+bool JMath::IsLarger(float a, float b)
+{
+	return a > b;
+}

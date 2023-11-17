@@ -12,9 +12,18 @@ ACube::ACube()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	Mesh->bAlwaysCreatePhysicsState = true;
+	Mesh->SetNotifyRigidBodyCollision(true);
+	Mesh->SetCollisionProfileName("BlockAllDynamic");
+	Mesh->OnComponentHit.AddDynamic(this, &ACube::OnHit);
+	RootComponent = Mesh;
 
 	t = 0;
 	tL = 1;
+	playTime = 1;
+	startScaleMult = 0;
+	endScaleMult = 1;
+	curveType = ECurveTypes::Linear;
 }
 
 // Called when the game starts or when spawned
@@ -22,6 +31,7 @@ void ACube::BeginPlay()
 {
 	Super::BeginPlay();
 	startScale = Mesh->GetRelativeScale3D();
+
 }
 
 // Called every frame
@@ -49,6 +59,7 @@ void ACube::Tick(float DeltaTime)
 			normal = JMath::InverseCurveNormal(normal);
 			break;
 
+		//Add more curves as necessary
 		default:
 			break;
 	}
@@ -58,4 +69,20 @@ void ACube::Tick(float DeltaTime)
 
 	Mesh->SetWorldScale3D(currentScale);
 }
+
+void ACube::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, "Hit");
+	
+	//Is Above
+	if (JMath::IsLarger(OtherActor->GetActorLocation().Z, this->GetActorLocation().Z))
+	{
+		FVector up = OtherActor->GetActorUpVector();
+		OtherComp->AddForce(up * 100000 * OtherComp->GetMass());
+		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, "Above");
+	}
+	
+}
+
 
