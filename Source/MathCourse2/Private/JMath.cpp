@@ -25,6 +25,12 @@ float JMath::InverseCurveNormal(float n)
 	return n = 1 - (n * n);
 }
 
+float JMath::PerlinNoiseRandCurve(float n)
+{
+	float pNoise = FMath::PerlinNoise1D(n);
+	return pNoise * pNoise;
+}
+
 float JMath::InvLerp(float a, float b, float value)
 {
 	return JMath::Clamp(0, 1, (value - a) / (b - a));

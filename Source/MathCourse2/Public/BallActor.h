@@ -19,6 +19,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
+	UPROPERTY(EditAnywhere)
+	UMaterialInterface* Material;
 
 public:	
 	// Called every frame
@@ -33,11 +36,13 @@ private:
 	float radius;
 	FVector Velocity;
 	FVector GravityVelocity;
-
 	TArray<ACube*> StaticColl;
 	TArray<ABallActor*> DynColl;
-
 	float bounceStr;
-
 	FVector drag;
+	UMaterialInstanceDynamic* DynMaterial;
+	FVector spawnPos;
+	float spawnDisMax;
+
+	void ResetPos();
 };

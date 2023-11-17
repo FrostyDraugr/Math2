@@ -61,6 +61,10 @@ void ACube::Tick(float DeltaTime)
 			normal = JMath::InverseCurveNormal(normal);
 			break;
 
+		case ECurveTypes::PerlinNoise:
+			normal = JMath::PerlinNoiseRandCurve(normal);
+			break;
+
 		//Add more curves as necessary
 		default:
 			break;

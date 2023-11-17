@@ -19,13 +19,20 @@ ABallActor::ABallActor()
 	GravityVelocity = FVector(0, 0, -980);
 	bounceStr = 1000.f;
 	drag = FVector(0.1f, 0.1f, 1);
+	spawnDisMax = 500.f;
 }
 
 // Called when the game starts or when spawned
 void ABallActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	DynMaterial = UMaterialInstanceDynamic::Create(Material, this);
+
+	spawnPos = GetActorLocation();
+
+	Mesh->SetMaterial(0, DynMaterial);
+
 	TArray<AActor*> FoundActors;
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACube::StaticClass(), FoundActors);
@@ -84,6 +91,15 @@ void ABallActor::Tick(float DeltaTime)
 	Velocity.Z += GravityVelocity.Z * DeltaTime;
 
 	SetActorLocation(Pos + (Velocity) * DeltaTime);
+
+	//Generate Normalise PerlinNoise Value depending on Actor Location
+	//Right now it's just flickering a bunch, which I mean makes sense...
+	//I should probably offload this to a timeline that Lerps the color to a target color every cycle
+	float pNoise = FMath::PerlinNoise3D(GetActorLocation());
+	DynMaterial->SetScalarParameterValue("Normal", pNoise);
+	
+	if (Pos.Z < -2000)
+		ResetPos();
 }
 
 float ABallActor::GetRadius()
@@ -92,4 +108,20 @@ float ABallActor::GetRadius()
 	FVector scale = Mesh->GetRelativeScale3D();
 	return radius * scale.X;
 }
+
+void ABallActor::ResetPos()
+{
+	float pNoise = FMath::PerlinNoise3D(GetActorLocation());
+	FRandomStream random;
+	random.GenerateNewSeed();
+	FVector randomVector = random.GetUnitVector();
+
+	FVector SpawnOffset = spawnPos + (randomVector * (pNoise * spawnDisMax));
+
+	Velocity = FVector(0, 0, 0);
+	
+	SetActorLocation(SpawnOffset);
+}
+
+
 

@@ -17,6 +17,8 @@ public:
 
 	static float InverseCurveNormal(float n);
 
+	static float PerlinNoiseRandCurve(float n);
+
 	static float InvLerp(float a, float b, float value);
 
 	static FVector VectorLerp(FVector a, FVector b, float n);

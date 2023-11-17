@@ -7,4 +7,5 @@ enum class ECurveTypes : uint8
 {
 	Linear UMETA(DisplayName = "Linear"),
 	InverseCurve UMETA(DisplayName = "Inverse"),
+	PerlinNoise UMETA(DisplayName = "PerlinNoise"),
 };
