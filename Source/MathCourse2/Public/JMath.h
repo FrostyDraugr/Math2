@@ -24,4 +24,10 @@ public:
 	static float Clamp(float min, float max, float value);
 
 	static bool IsLarger(float a, float b);
+
+	static FVector GetBounceNormal(FVector a, FVector b);
+
+	static float GetMagnitude(FVector a);
+
+	static FVector NormalizeVector(FVector a);
 };

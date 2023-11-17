@@ -39,6 +39,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ECurveTypes curveType;
 
+	float GetRadius();
 
 private:
 
@@ -46,6 +47,7 @@ private:
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
+	float radiusC;
 	float t;
 	int tL;
 	FVector startScale;

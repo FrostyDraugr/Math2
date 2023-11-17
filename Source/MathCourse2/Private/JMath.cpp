@@ -58,3 +58,19 @@ bool JMath::IsLarger(float a, float b)
 {
 	return a > b;
 }
+
+FVector JMath::GetBounceNormal(FVector a, FVector b)
+{
+	return NormalizeVector(a - b);
+}
+
+float JMath::GetMagnitude(FVector a)
+{
+	//Shame, using FMath in JMath
+	return FMath::Sqrt((a.X * a.X) + (a.Y * a.Y) + (a.Z * a.Z));
+}
+
+FVector JMath::NormalizeVector(FVector a)
+{
+	return a / GetMagnitude(a);
+}

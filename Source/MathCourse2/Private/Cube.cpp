@@ -12,8 +12,9 @@ ACube::ACube()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	Mesh->bAlwaysCreatePhysicsState = true;
-	Mesh->SetNotifyRigidBodyCollision(true);
+	Mesh->bAlwaysCreatePhysicsState = false; //Used to be true but for new custom physics I have to turn this off.
+	Mesh->SetNotifyRigidBodyCollision(false);
+	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	Mesh->SetCollisionProfileName("BlockAllDynamic");
 	Mesh->OnComponentHit.AddDynamic(this, &ACube::OnHit);
 	RootComponent = Mesh;
@@ -24,6 +25,7 @@ ACube::ACube()
 	startScaleMult = 0;
 	endScaleMult = 1;
 	curveType = ECurveTypes::Linear;
+	radiusC = 160.f;
 }
 
 // Called when the game starts or when spawned
@@ -70,6 +72,12 @@ void ACube::Tick(float DeltaTime)
 	Mesh->SetWorldScale3D(currentScale);
 }
 
+float ACube::GetRadius()
+{
+	//Only works with uniform scale
+	return radiusC * Mesh->GetRelativeScale3D().X;
+}
+
 void ACube::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
@@ -80,7 +88,7 @@ void ACube::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 	{
 		FVector up = OtherActor->GetActorUpVector();
 		OtherComp->AddForce(up * 100000 * OtherComp->GetMass());
-		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, "Above");
+		//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, "Above");
 	}
 	
 }
