@@ -37,16 +37,12 @@ void ABallActor::BeginPlay()
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACube::StaticClass(), FoundActors);
 
+	//Collidable object cache
 	for (AActor* actor : FoundActors)
 	{
 		ACube* staticCollider = Cast<ACube>(actor);
 		StaticColl.Add(staticCollider);
-		//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, "Test");
 	}
-
-	//FString printStr = FString::SanitizeFloat(JMath::NormalizeVector(GravityVelocity).X);
-	//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, printStr);
-
 }
 
 // Called every frame
@@ -55,39 +51,31 @@ void ABallActor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	FVector Pos = GetActorLocation();
-	//Physics
-		//Check if grounded, only have spheres so this check is basicaly useless	
-			//If Other Actor is bellow && Distance is less than 0
-			//Between the two actors radius
-
-	//Collission Check
+	//Assignment 4: Collission Check
 		//Check if Distance between ThisActor and OtherActor is less than
 		//This radius + Other Radius, if so add velocity away from other actor
 	for (ACube* staticColl : StaticColl)
 	{
 		FVector posB = staticColl->GetActorLocation();
 		float distance = FVector::Dist(Pos, posB);
+		
+			//Assignment 3: Intersection, if ball collider is within collider of obstacle
 		if (distance < (GetRadius() + staticColl->GetRadius()))
 		{
 			//GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Red, "collission");
 			//GetBounceDir then add Force
 			FVector dir = JMath::GetBounceNormal(Pos, posB);
-			Velocity += dir * bounceStr;
+			Velocity = dir * JMath::GetMagnitude(Velocity);
+			//Velocity += dir * bounceStr;
 
-			if (JMath::IsLarger(Pos.Y, posB.Y))
+			//Assignment 1, if ball hits the obstacles on top, add an upward force
+			if (JMath::IsLarger(posB.Y, Pos.Y))
 			{
-				Velocity.Y += bounceStr * 0.5f;
+				Velocity.Y += bounceStr;
 			}
 		}
 	}
 	
-	//This drag is weird and simplistic, should probably use a curve here instead
-	//Velocity -= drag * DeltaTime;
-	
-	//Just capping Gravity Down force, would depend on the atosmphere
-	//Velocity.Z = GravityVelocity.Z;
-	//if (Velocity.Z < GravityVelocity.Z)
-
 	Velocity.Z += GravityVelocity.Z * DeltaTime;
 
 	SetActorLocation(Pos + (Velocity) * DeltaTime);
@@ -111,6 +99,9 @@ float ABallActor::GetRadius()
 
 void ABallActor::ResetPos()
 {
+	//Assignment 5: Reset ball at a random distance away
+	//from original spawn position depending on the location
+	//the ball "died" at.
 	float pNoise = FMath::PerlinNoise3D(GetActorLocation());
 	FRandomStream random;
 	random.GenerateNewSeed();

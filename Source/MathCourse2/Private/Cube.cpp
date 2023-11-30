@@ -41,6 +41,9 @@ void ACube::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	
+	//Assignment 2, obstacles that Lerp back and forth
+	//depending on which curve has been set
 	if (t > playTime || t < 0)
 		tL *= -1;
 
@@ -85,15 +88,13 @@ float ACube::GetRadius()
 void ACube::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, "Hit");
-	
+	//Old code, made before custom collision
 	//Is Above
-	if (JMath::IsLarger(OtherActor->GetActorLocation().Z, this->GetActorLocation().Z))
-	{
-		FVector up = OtherActor->GetActorUpVector();
-		OtherComp->AddForce(up * 100000 * OtherComp->GetMass());
-		//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, "Above");
-	}
+	//if (JMath::IsLarger(OtherActor->GetActorLocation().Z, this->GetActorLocation().Z))
+	//{
+	//	FVector up = OtherActor->GetActorUpVector();
+	//	OtherComp->AddForce(up * 100000 * OtherComp->GetMass());
+	//}
 	
 }
 
